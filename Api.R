@@ -1,5 +1,5 @@
 ####################################### MODELADO ########################################
-# 1- TRANSFORMACIÓN DEL DATAFRAME -----------------------------------------
+# 1- TRANSFORMACI?N DEL DATAFRAME -----------------------------------------
 dfm <- read.csv("./DatosTransformados/df.csv", sep=",", header = T)
 dfm$X <- NULL ; dfm$product_category_1 <- NULL
 dfm$product_category_2 <- NULL ; dfm$product_category_3 <- NULL
@@ -275,7 +275,7 @@ avg(predicciones6)
 options(scipen=999)
 df<-df %>% mutate(fecha=as.Date(df$transaction_timestamp,format="%d-%b-%y"))
 cdias<-function(from,to){
-  d<-c("lunes","martes","miércoles","jueves","viernes","sábado","domingo")
+  d<-c("lunes","martes","mi?rcoles","jueves","viernes","s?bado","domingo")
   to<-as.Date(to)
   from<-as.Date(from)
   dif<-to-from
@@ -308,16 +308,16 @@ evol_prod<-aggregate(qty ~ transaction_timestamp, df, FUN=sum)
 goles_x_etapa <- round(aggregate(qty ~ transaction_timestamp, evol_prod, FUN=sum)[,2],2)
 evol_prod$transaction_timestamp
 mean(evol_prod$qty)
-#VISUALIZACIÓN FINAL:
+#VISUALIZACI?N FINAL:
 names(evol_prod)
-ggplot(evol_prod, aes(x=transaction_timestamp, y=qty)) + #Datos: evol_goles, con el año en el eje X y los promedios en el Y
-  geom_point(size=2) + geom_line() + #Comandos para poner los puntos y la línea
-  stat_smooth(method="lm", se=F, formula= y ~ 1, aes(col=transaction_timestamp))+#Añadimos una línea que indique la media de goles en las dos etapas
-  theme_fivethirtyeight(base_size = 14)+ #Usamos el tema de FiveThirtyEight para el gráfico
-  scale_colour_manual(values = fivethirtyeight_pal()(2))+#Señalamos los colores que queremos para indicar las medias por etapa
-  labs(title = "Evolución del promedio de productos en  junio 2019 ",
-       caption = "socios y no socios")+ #Por último, títulos y subtítulos del gráfico+
-  annotate("text", x=(mean(df$transaction_timestamp)-10), y=c(60000), #Con annotate() introduciremos el texto para indicar el promedio numérico para cada etapa
+ggplot(evol_prod, aes(x=transaction_timestamp, y=qty)) + #Datos: evol_goles, con el a?o en el eje X y los promedios en el Y
+  geom_point(size=2) + geom_line() + #Comandos para poner los puntos y la l?nea
+  stat_smooth(method="lm", se=F, formula= y ~ 1, aes(col=transaction_timestamp))+#A?adimos una l?nea que indique la media de goles en las dos etapas
+  theme_fivethirtyeight(base_size = 14)+ #Usamos el tema de FiveThirtyEight para el gr?fico
+  scale_colour_manual(values = fivethirtyeight_pal()(2))+#Se?alamos los colores que queremos para indicar las medias por etapa
+  labs(title = "Evoluci?n del promedio de productos en  junio 2019 ",
+       caption = "socios y no socios")+ #Por ?ltimo, t?tulos y subt?tulos del gr?fico+
+  annotate("text", x=(mean(df$transaction_timestamp)-10), y=c(60000), #Con annotate() introduciremos el texto para indicar el promedio num?rico para cada etapa
            label= paste("Media = 58745  productos"), col=fivethirtyeight_pal()(1)) 
 evol_prod$transaction_timestamp
 
@@ -335,4 +335,14 @@ df %>%
 cdias(min(df$fecha),max(df$fecha))
 table(df$dias)
 
+#
+#plumber_API_subsectores.R
+
+#* @get /barras_subsector
+#* @serializer png
+
+function(usuario="") {
+  usuario= userTimeline("", n = 3200)
+  print(usuario[1])
+}
 
